@@ -16,7 +16,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  ubuntu-build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -36,6 +36,57 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+
+      - name: configure
+        run: |
+          mkdir build
+          cd build
+          cmake ..
+          
+      - name: build
+        run: cmake --build build -j 2
+        
+      - name: test
+        run: |
+          cd build
+          ./tests
+
+  windows-build:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive 
+
+      - name: configure
+        run: |
+          mkdir build
+          cd build
+          cmake ..
+          
+      - name: build
+        run: cmake --build build -j 2
+        
+      - name: test
+        run: |
+          cd build
+          cd Debug
+          ./tests
+          
+  macOS-build:
+    # The type of runner that the job will run on
+    runs-on: macOS-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive 
 
       - name: configure
         run: |
